@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 import sklearn.model_selection as sk
+import matplotlib.pyplot as plt
 
 
 df = pd.read_csv("usa_00004.csv", sep=",")
@@ -13,6 +14,7 @@ df = df.iloc[: , 10:]
 del df['RACED']
 del df['EDUCD']
 del df['DEGFIELDD']
+
 
 def build_model(n_hidden, n_neurons_hidden, n_neurons_output, learning_rate):
 
@@ -66,9 +68,9 @@ for i in range(len(labels)):
 
 X_train, X_test, y_train, y_test = sk.train_test_split(features,labels,test_size=0.33, random_state = 42)
 
-hiddens = [18, 27, 36]
-neurons = [20, 80, 120]
-learning_rates = [0.01, 0.05, 0.1]
+hiddens = [18, 27]
+neurons = [20, 80]
+learning_rates = [0.05, 0.1]
 
 best_hidden = hiddens[0]
 best_neuron = neurons[0]
@@ -93,3 +95,14 @@ for h in hiddens:
             print("Highest SVM accuracy so far: " + str(highestAccuracy))
             print("Parameters: " + "Number of Hidden Layers: " + str(h) + ",number of neurons: " + str(n) + ",learning rate: " + str(l))
             print()
+
+#After generating all neural networks, print the highest accuracy again and the final weights and biases of the best model
+print("Highest SVM accuracy so far: " + str(highestAccuracy))
+
+#You can generate the model again by using the hyper-parameters found before
+model = build_model(best_hidden, best_neuron, 10, best_learning_r)
+
+weights, biases = model.layers[1].get_weights()
+print(weights)
+print(biases)
+
