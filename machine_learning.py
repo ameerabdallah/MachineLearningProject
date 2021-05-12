@@ -5,6 +5,7 @@ import numpy
 import math
 import sklearn.model_selection as sk
 from tensorflow.python.keras.callbacks import EarlyStopping
+import matplotlib.pyplot as plt
 
 def build_model(n_hidden, n_neurons_hidden, n_neurons_output, learning_rate):
 
@@ -38,7 +39,7 @@ def delete_extra_fields(df):
 
 def preprocess_dataset(x, y, classes):
 
-    class_bounds = [48500, 145500]
+    class_bounds = [48500, 150000]
     
     for i, label in enumerate(y):
         if class_bounds[0] > label:
@@ -96,8 +97,8 @@ def create_dictionary_from_cbk(file_name):
 
 dict_cbk, feature_names = create_dictionary_from_cbk('usa_00005.cbk')
 
-print(dict_cbk['AGE'][0])
-print(feature_names)
+# print(dict_cbk['AGE'][0])
+# print(feature_names)
 
 df = pd.read_csv("usa_00005.csv", sep=",")
 
@@ -113,7 +114,7 @@ dfy = df.loc[:,'INCTOT']
 
 del df
 
-classes = ['Under $48,500 (Lower-Income)', '$48,500 to $145,499 (Middle-Income)', '$150,000 and over (Upper-Income)']
+classes = ['Under $48,500 (Lower-Income)', '$48,500 to $149,99 (Middle-Income)', '$150,000 and over (Upper-Income)']
 
 x = numpy.array(dfx.values)
 y = numpy.array(dfy.values)
@@ -136,8 +137,8 @@ best_learning_r = learning_rates[0]
 highestAccuracy = 0
 
 early_stopping = EarlyStopping(monitor ="val_loss", 
-                                        mode ="min", patience = 5, 
-                                        restore_best_weights = True)
+                                mode ="min", patience = 5, 
+                                restore_best_weights = True)
 
 best_model = build_model(best_hidden, best_neuron, len(classes), best_learning_r)
 
@@ -166,4 +167,22 @@ for h in hiddens:
 
 print("Best Parameters: " + "Number of Hidden Layers: " + str(best_hidden) + ",number of neurons: " + str(best_neuron) + ",learning rate: " + str(best_learning_r) )
 
-model.predict()
+#model.predict()
+
+# summarize history for accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()

@@ -56,21 +56,19 @@ labels = np.array(df.values)[:,-1]
         labels[i] = 7"""
 
 for i in range(len(labels)):
-    if labels[i] < 50000:
+    if labels[i] < 48500:
         labels[i] = 1
-    elif 50000 <= labels[i] < 100000:
+    elif 48500 <= labels[i] < 150000:
         labels[i] = 2
-    elif 100000 <= labels[i] < 200000:
+    elif 150000 <= labels[i]:
         labels[i] = 3
-    elif 200000 <= labels[i]:
-        labels[i] = 4
 
 
 X_train, X_test, y_train, y_test = sk.train_test_split(features,labels,test_size=0.33, random_state = 42)
 
-hiddens = [18, 27]
-neurons = [20, 80]
-learning_rates = [0.05, 0.1]
+hiddens = [10, 20]
+neurons = [20, 25]
+learning_rates = [0.05]
 
 best_hidden = hiddens[0]
 best_neuron = neurons[0]
@@ -83,7 +81,7 @@ for h in hiddens:
             model = build_model(h, n, 10, l)
 
             #To train the model
-            history = model.fit(X_train, y_train, epochs=5, validation_data=(X_train, y_train))
+            history = model.fit(X_train, y_train, epochs=100, validation_data=(X_train, y_train))
             
             #Calculate the accuracy of this neural network and store its value if it is the highest so far. To make a prediction, do:
             class_predicted = np.argmax(model.predict(X_test), axis=-1)
@@ -102,7 +100,21 @@ print("Highest SVM accuracy so far: " + str(highestAccuracy))
 #You can generate the model again by using the hyper-parameters found before
 model = build_model(best_hidden, best_neuron, 10, best_learning_r)
 
-weights, biases = model.layers[1].get_weights()
-print(weights)
-print(biases)
 
+# summarize history for accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
