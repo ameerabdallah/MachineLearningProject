@@ -167,7 +167,6 @@ for h in hiddens:
 
 print("Best Parameters: " + "Number of Hidden Layers: " + str(best_hidden) + ",number of neurons: " + str(best_neuron) + ",learning rate: " + str(best_learning_r) )
 
-#model.predict()
 
 # summarize history for accuracy
 plt.plot(history.history['accuracy'])
